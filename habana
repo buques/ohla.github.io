@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+<script src="script.js" defer></script>
+
+    <title>Compra por WhatsApp</title>
+    <style>
+        /* Estilos generales */
+        body {
+           background:linear-gradient(to right,#98FF98,#FF7F7F);
+            position: 
+            font-family: 
+justify-content:center;
+display:flex;
+flex-direction: column;
+align-items:center; 
+margin-bottom:45px;
+        }
+       .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    width:100%;
+    justify-content:center;
+    text-align:center;
+}
+
+.card {
+    margin:auto;
+    width: calc(48% - 2px); /* Calcula el ancho para que quepan dos tarjetas por fila */
+    border: px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ccc;
+}
+
+.card-content {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.card h2 {
+    text-align:left;
+    width:100%;
+    font-size: 16px;
+    margin: 10px 0;
+    color: #333;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    text-overflow:ellipsis;
+    margin:5px 2px;
+    
+}
+
+.card p {
+    font-size: 14px;
+    color: #666;
+    margin:2px 2px;
+    text-align: left;
+    flex-grow: 1;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    text-overflow:ellipsis;
+}
+
+.card .precio {
+    font-size: 18px;
+    color: #00CED1;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: left;
+    margin:5px 2px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    width:100%;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    gap:10px;
+    background:linear-gradient(to right,#98FF98,#FF7F7F);
+    border-radius:8px;
+    padding:5px 0;
+}
+
+
+        .button-container button {
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: ;
+            border: 0;
+          
+        }
+
+        .cantidad-span {
+            font-size: 16px;
+            margin-right:2px;
+            font-weight: bold;
+            color:black;
+        }
+.button-container .add {
+            background-color:white; border-radius:50%;padding:5px 5px; width:35px; height:35px;border:2px solid green;
+        }
+
+        .button-container .remove {
+            background-color:white; border-radius:50%;padding:5px 5px; width:35px; height:35px;border:2px solid red;
+        }
+
+        .button-container .add::before {
+            content: '➕';
+            font-size:14px;
+            color:White;
+        }
+
+        .button-container .remove::before {
+            content: '➖';
+            font-size:14px;
+            color: ;
+        }
+
+        /* Botón flotante del carrito */
+        .carrito-flotante {
+            position: fixed ;
+            bottom: 80px;
+            right: 20px;
+            background-color: #00CED1;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 30px;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+        }
+.carrito-flotante {
+    position: fixed; /* Añadir para posicionar el span de notificación */
+}
+
+.carrito-notificacion {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+        .carrito-flotante:hover{
+            background-color:#166866
+        }
+        .precio{
+            color:yellow;
+            margin-right:10px;
+            font-weight:bold;
+            font-size:18px;
+         }
+        /* Estilos del modal */
+        .modalCard {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #f0ffff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 80%;
+    text-align: center;
+}
+
+.modal-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
+#modalPrice {
+color:#00CED1;
+font-weight:bold;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+       #modal {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+       width: 100%;
+       height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+ }
+
+        #modalContent{
+            background-color:#f0ffff ;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        #modalContent label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        #modalContent input[type="text"],
+        #modalContent input[type="number"],
+        #modalContent select,
+        #modalContent textarea {
+            width: calc(100% - 10px);
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .modal-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .modal-button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+         .modal-button-container button {
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 48%;
+        }
+        
+
+        .modal-button-container button:last-child {
+            background-color: #dc3545;
+        }
+
+        .modal-button-container button:hover {
+            background-color:blue ;
+        }
+
+        .modal-button-container button:last-child:hover {
+            background-color: #f0ffff;
+        }
+
+.boton-head {
+    display: flex;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.menu-botones {
+    display: flex;
+    gap: 8px; /* Espacio entre los botones */
+    justify-content: space-between; /* Centra los botones horizontalmente */
+    align-items: center; /* Alinea los botones verticalmente */
+    flex-direction: row; /* Mantiene los botones en una sola línea */
+   width:100%;
+}
+
+.menu-botones a {
+    padding: 20px 5px; /* Ajuste del padding para controlar el espacio interior */
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Elimina el ancho fijo para que se ajuste al contenido */ 
+    height:20px;
+    font-size: 16px;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin:0px 5px;
+}
+
+.menu-botones a:hover {
+    background-color: #98FF98;
+}
+
+
+/* Estilo para la barra de entrada de texto */
+#question {
+    width: 100%; /* Ajusta el ancho según tus necesidades */
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 14px; /* Tamaño de fuente */
+    margin-right: 10px; /* Espacio a la derecha del textarea */
+}
+
+/* Estilo para el contenedor de los botones y la barra de entrada */
+#buttonContainer {
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos */
+    gap: 10px; /* Espacio entre la barra de entrada y el botón */
+}
+
+/* Estilo para el botón de enviar pregunta */
+#questionButton {
+    background-color: orange;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+/* Slider styles */
+.slider-container {
+    position: relative;
+    min-width: 100%;
+    margin: auto;
+    overflow: hidden;
+    margin-bottom:10px;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.slide img {
+    width: 100%;
+    height: auto;
+    border-radius:6px;
+}
+
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.5);
+ display:none;
+}
+
+.prev {
+    left: 0;
+}
+
+.next {
+    right: 0;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+ /* Estilo general del contenedor */
+.texto-profesional {
+    background-color: #f8f8ff; /* Color de fondo suave */
+    color: #333; /* Color del texto */
+    padding: 20px; /* Espacio alrededor del texto */
+    border-radius: 8px; /* Bordes redondeados */
+    font-family: 'PT Sans', sans-serif; /* Fuente limpia y moderna */
+    line-height: 1.6; /* Espaciado entre líneas para mejor legibilidad */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para profundidad */
+width:88%;
+margin:auto;
+margin-bottom:10px;
+}
+
+/* Título o encabezado */
+.texto-profesional h2 {
+    color: #283747; /* Color de texto más oscuro para encabezados */
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Listas con íconos */
+.texto-profesional ul {
+    list-style: none; /* Eliminar la viñeta predeterminada */
+    padding: 0;
+    margin: 20px 0;
+}
+
+.texto-profesional ul li {
+    font-size: 18px;
+    margin-bottom: 10px;
+    padding-left: 25px; /* Espacio para el icono personalizado */
+    position: relative;
+}
+
+.texto-profesional ul li::before {
+    content: "✔️"; /* Puedes cambiar este icono por uno diferente */
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 18px;
+    color: #00CED1; /* Color del icono */
+}
+
+/* Estilo para las llamadas a la acción */
+.texto-profesional a {
+    color: #00CED1;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.texto-profesional a:hover {
+    text-decoration: none;
+}
+
+/* Estilo para el contacto */
+.texto-profesional .contacto {
+    margin-top: 20px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.texto-profesional .contacto a {
+    display: inline-block;
+    margin: 5px 0;
+}
+      
+
+    </style>
+</head>
+<body>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v20.0"></script>
+
+<!-- Slider -->
+<div class="slider-container">
+    <div class="slider">
+        <div class="slide"><img src="https://i.postimg.cc/G3qPGHMC/Grid-Art-20240901-152345187.jpg" alt="Slide 1"></div>
+        <div class="slide"><img src="https://i.postimg.cc/5y7wVRH0/Grid-Art-20240901-152513097.jpg" alt="Slide 2"></div>
+        <div class="slide"><img src="https://i.postimg.cc/4xbxHh5v/Grid-Art-20240901-160512451.jpg" alt="Slide 2"></div>
+        <div class="slide"><img src="https://i.postimg.cc/QtqQ6thc/Grid-Art-20240901-155512144.jpg" alt="Slide 3"></div>
+    </div>
+    <button class="prev">❮</button>
+    <button class="next">❯</button>
+</div>
+
+<!-- Botones de menu -->
+<div class="boton-head">
+    <div class="menu-botones">
+        <a href="https://sites.google.com/view/ohla-habana/helados-habana">Helados</a>
+    
+        <a href="https://sites.google.com/view/ohla-habana/pizzas">Pizzas</a>
+    </div>
+</div>
+
+
+<div class="texto-profesional">
+    <h2>Helados Habana</h2>
+    <p>¡Disfruta de la dulzura artesanal en la comodidad de tu hogar con nuestros helados de sabor auténticos!</p>
+    <p>Antes de continuar, consulta...</p>
+    <div class="contacto">
+        🍨 <a href="https://telegra.ph/Sabores-disponibles-03-23">Sabores disponibles</a><br>
+        
+    </div>
+</div>
+
+<div class="cards-container">
+<div class="card" data-categoria="todos" data-id="rizado de coco con chocolate" data-precio="1600" data-name="Rizado de coco con chocolate">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/zGFtMffq/IMG-20240925-213533.jpg" alt="Rizado de coco con chocolate">
+        <div class="card-content">
+            <h2>Rizado de coco con chocolate</h2>
+            <p>Helados Artesanales de rizado de coco con chocolate... elaborados con productos y maquinaria importados.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+</div>
+<div class="card" data-categoria="zapatos" data-id="Rizado de Caramelo con chocolate" data-precio="1600" data-name="Rizado de Caramelo con chocolate">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/SKGWJhqK/paso-a-paso-para-hacer-helado-de-caramelo-con-crocanti-y-chocolate-resultado-final-537efbf5-800x800.jpg" alt="Mantecado">
+        <div class="card-content">
+            <h2>Rizado de Caramelo con chocolate</h2>
+            <p>Helados Artesanales de Rizado de Caramelo con chocolate, elaborados con productos y maquinaria importados... La imagen del card tiene solo fin ilustrativo.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+</div>
+<div class="card" data-categoria="zapatos" data-id="Caramelo" data-precio="1600" data-name="Caramelo">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/m2Fphtn2/Grid-Art-20240903-212631259.jpg" alt="Caramelo">
+        <div class="card-content">
+            <h2>Caramelo</h2>
+            <p>Helados Artesanales de Caramelo, elaborados con productos y maquinaria importados... La imagen del card tiene solo fin ilustrativo.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+</div>
+<div class="card" data-categoria="zapatos" data-id="Rizado de Fresa con chocolate" data-precio="1600" data-name="rizado de Fresa con chocolate">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/76T66tQh/134304.jpg" alt="Vainilla">
+        <div class="card-content">
+            <h2>Rizado de fresa con chocolate</h2>
+            <p>Helados Artesanales de Rizado de fresa con chocolate, elaborados con productos y maquinaria importados... La imagen del card tiene solo fin ilustrativo.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+</div>
+<div class="card" data-categoria="todos" data-id="naranja-piña" data-precio="1600" data-name="Naranja-Piña">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/nr6F6k09/img.webp" alt="Naranja-Piña">
+        <div class="card-content">
+            <h2>Naranja-Piña</h2>
+            <p>Helados Artesanales de Naranja-Piña... elaborados con productos y maquinaria importados. La imagen del card sólo tiene fines ilustrativo.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+</div>
+<div class="card" data-categoria="zapatos" data-id="Almendra" data-precio="1600" data-name="Almendra">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/XJ28jJm4/foto-receta-helado-de-almendras.jpg" alt="Chocolate">
+        <div class="card-content">
+            <h2>Almendra</h2>
+            <p>Helados Artesanales de Almendra, elaborados con productos y maquinaria importados... La imagen del card tiene solo fin ilustrativo.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+</div>
+<div class="card" data-categoria="zapatos" data-id="fresa" data-precio="1600" data-name="fresa">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/yND6QrKj/helado-fresas-paleo-facil.jpg" alt="Vainilla">
+        <div class="card-content">
+            <h2>Fresa</h2>
+            <p>Helados Artesanales de Fresa, elaborados con productos y maquinaria importados... La imagen del card tiene solo fin ilustrativo.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+</div>
+
+<div class="card" data-categoria="zapatos" data-id="vainilla" data-precio="1600" data-name="Vainilla">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/x8zbw1Ss/como-hacer-helado-de-vainilla-28856-600-square.jpg" alt="Vainilla">
+        <div class="card-content">
+            <h2>Sabor Vainilla</h2>
+            <p>Helados Artesanales de Vainilla, elaborados con productos y maquinaria importados... La imagen del card tiene solo fin ilustrativo.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+ </div>
+<div class="card" data-categoria="zapatos" data-id="Rizado de Vainilla con chocolate" data-precio="1600" data-name="Rizado de Vainilla con chocolate">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/VNMzRf5Y/Grid-Art-20240903-212022433.jpg" alt="Caramelo">
+        <div class="card-content">
+            <h2>Rizado de Vainilla con chocolate</h2>
+            <p>Helados Artesanales de Rizado de Vainilla con chocolate, elaborados con productos y maquinaria importados... La imagen del card tiene solo fin ilustrativo.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+</div>
+<div class="card" data-categoria="zapatos" data-id="Mantecado" data-precio="1600" data-name="Mantecado">
+    <div class="card-content-wrapper">
+        <img src="https://i.postimg.cc/G3gxFdD8/granel-mantecado.png" alt="Mantecado">
+        <div class="card-content">
+            <h2>Mantecado</h2>
+            <p>Helados Artesanales de Mantecado, elaborados con productos y maquinaria importados... La imagen del card tiene solo fin ilustrativo.</p>
+            <span class="precio">$1600</span>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="add"></button>
+        <span class="cantidad-span">0</span>
+        <button class="remove"></button>
+    </div>
+</div>
+</div>
+
+
+
+
+<!-- Botón flotante del carrito -->
+<!-- Botón flotante del carrito -->
+
+<button class="carrito-flotante" onclick="mostrarFormulario()">
+    🛒<span class="carrito-notificacion">0</span>
+</button>
+
+
+<!-- Modal para mostrar el carrito y hacer la compra -->
+<div id="modal">
+    <div id="modalContent">
+        <div class="modal-container">
+            <h3>Carrito de Compras</h3>
+            <div id="carritoDetalle"></div>
+            <div>
+
+<div>
+    <label for="subtotalEnvio"></label>
+<span style="display:none" id="subtotalEnvio"></span>
+</div>
+    
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" required><br>
+                <label for="telefono">Teléfono:</label>
+                <input type="number" id="telefono" required><br>
+                <label for="opcionesEnvio">Opciones de Envío:</label>
+               
+<select id="opcionesEnvio">
+    <option value="0">Seleccionar...</option>
+<option value="350" data-municipio="Centro Habana">Centro Habana - 350 CUP</option>
+<option value="350" data-municipio="Habana Vieja">Habana Vieja - 350 CUP</option>
+<option value="350" data-municipio="Plaza (Nuevo Vedado)">Plaza (Nuevo Vedado) - 350 CUP</option>
+<option value="350" data-municipio="Vedado">Vedado - 350 CUP</option>
+<option value="450" data-municipio="Playa">Playa - 450 CUP</option>
+<option value="350" data-municipio="Luyano (10 de OCT)">Luyano (10 de OCT) - 350 CUP</option>
+<option value="350" data-municipio="Santo Suárez (10 de OCT)">Santo Suárez (10 de OCT) - 350 CUP</option>
+<option value="350" data-municipio="Vivora (10 de OCT)">Vivora (10 de OCT) - 350 CUP</option>
+<option value="350" data-municipio="Lawton (10 de OCT)">Lawton (10 de OCT) - 350 CUP</option>
+<option value="350" data-municipio="Sevillano (10 de OCT)">Sevillano(10 de OCT) - 350 CUP</option>
+<option value="350" data-municipio="Monaco (10 de OCT)">Monaco (10 de OCT) - 350 CUP</option>
+<option value="400" data-municipio="Arroyo Naranjo">Arroyo Naranjo - 400 CUP</option>
+<option value="400" data-municipio="Vivora Park">Vivora Park - 400 CUP</option>
+<option value="450" data-municipio="Reparto Montejo">Reparto Montejo - 450 CUP</option>
+<option value="450" data-municipio="Hasta el Frank País (La Lisa)">Hasta el Frank País (La Lisa) - 450 CUP</option>
+<option value="450" data-municipio="Altura de la Lisa">Altura de la Lisa - 450 CUP</option>
+<option value="450" data-municipio="Hasta La Coronela (La Lisa)">Hasta La Coronela (La Lisa) - 450 CUP</option>
+<option value="450" data-municipio="San Agustín (La Lisa)">San Agustín (La Lisa) - 450 CUP</option>
+<option value="350" data-municipio="Hasta Vía Blanca (Cerro)">Hasta Vía Blanca (Cerro) - 350 CUP</option>
+<option value="350" data-municipio="Después de Vía Blanca (Cerro)">Después de Vía Blanca (Cerro) - 350 CUP</option>
+<option value="450" data-municipio="Mazorra (Boyero)">Mazorra (Boyero) - 450 CUP</option>
+<option value="450" data-municipio="William Soler (Boyero)">William Soler (Boyero) - 450 CUP</option>
+<option value="450" data-municipio="Abel Santa María (Boyero)">Abel Santa María (Boyero) - 450 CUP</option>
+<option value="450" data-municipio="Hasta el entronque de la CUJAE (Boyero)">Hasta el entronque de la CUJAE (Boyero) - 450 CUP</option>
+<option value="450" data-municipio="La CUJAE (Boyero)">La CUJAE (Boyero) - 450 CUP</option>
+<option value="450" data-municipio="Después de la CUJAE hasta el aeropuerto (Boyero)">Después de la CUJAE hasta el aeropuerto (Boyero) - 450 CUP</option>
+<option value="450" data-municipio="Alta Habana (Boyero)">Alta Habana (Boyero) - 450 CUP</option>
+<option value="450" data-municipio="Marianao">Marianao - 450 CUP</option>
+<option value="300" data-municipio="Regla">Regla - 300 CUP</option>
+<option value="450" data-municipio="Cotorro">Cotorro - 450 CUP</option>
+<option value="300" data-municipio="Guanabacoa">Guanabacoa - 300 CUP</option>
+<option value="350" data-municipio="El puente de Santa Fe">El puente de Santa Fe - 350 CUP</option>
+<option value="350" data-municipio="Naval (Habana del Este)">Naval (Habana del Este) - 350 CUP</option>
+<option value="350" data-municipio="Cojimar (Habana del Este)">Cojimar (Habana del Este) - 350 CUP</option>
+<option value="300" data-municipio="Bahía (Habana del Este)">Bahía (Habana del Este) - 300 CUP</option>
+<option value="350" data-municipio="Casa Blanca (Habana del Este)">Casa Blanca (Habana del Este) - 350 CUP</option>
+<option value="350" data-municipio="Morro (Habana del Este)">Morro (Habana del Este) - 350 CUP</option>
+<option value="350" data-municipio="Alamar">Alamar - 350 CUP</option>
+<option value="350" data-municipio="San Miguel Padrón">San Miguel Padrón - 350 CUP</option>
+<option value="450" data-municipio="San Francisco de Paula (San Miguel Padrón)">San Francisco de Paula (San Miguel Padrón) - 450 CUP</option>
+</select>
+<br>
+
+                <label for="metodoPago">Método de Pago:</label>
+                <select id="metodoPago">
+                    <option value="efectivo">Efectivo</option>
+                    <option value="transferencia">Transferencia</option>
+                </select><br>
+
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion"><br>
+
+                <label for="nota">Punto de Referencia:</label>
+                <textarea id="nota"></textarea><br>
+            </div>
+
+            <div class="modal-button-container">
+                <button style="background-color:green; border:0px" onclick="enviarWhatsApp()">Enviar a WhatsApp</button>
+                <button style="border:0px" onclick="cerrarModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Información-->
+<div id="infoModal" class="modalCard" style="display:none;">
+    <div class="modal-content">
+        <span id="closeModal" class="close">×</span>
+        <img id="modalImg" src="" alt="">
+        <h2 id="modalTitle"></h2>
+        <p id="modalDescription"></p>
+        <span id="modalPrice"></span>
+    </div>
+</div>
+<div class="fb-like" data-href="https://sites.google.com/view/ohla-habana" data-width="30" data-layout="" data-action="" data-size="" data-share="true"></div>
+<footer style="position: fixed; bottom: 0; left: 0; right: 0; background-color: #333; padding: 10px; text-align: center; color: #fff; box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);">
+    <p style="margin: 0; font-size: 12px;">&copy; 2024 Oh' La Habana. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+
+document.getElementById('opcionesEnvio').addEventListener('change', function() {
+    const envioCosto = parseFloat(this.value);
+    const subtotalEnvioElement = document.getElementById('subtotalEnvio');
+    subtotalEnvioElement.textContent = `$${envioCosto.toFixed(2)}`;
+    actualizarCarritoDetalle();
+});
+
+
+
+let carrito = [];
+let carritoCantidad = 0;
+
+// Función para actualizar la cantidad en la tarjeta del producto
+function actualizarCantidadEnTarjeta(card, productoId) {
+    const cantidadSpan = card.querySelector('.cantidad-span');
+    const productoExistente = carrito.find(producto => producto.id === productoId);
+    cantidadSpan.textContent = productoExistente ? productoExistente.cantidad : 0;
+}
+
+function actualizarCarritoDetalle() {
+    const carritoDetalleElement = document.getElementById('carritoDetalle');
+    carritoDetalleElement.innerHTML = ''; // Limpiar contenido previo
+
+    // Si el carrito está vacío, mostrar mensaje
+    if (carrito.length === 0) {
+        carritoDetalleElement.innerHTML = '<p>Carrito vacío</p>';
+        return;
+    }
+
+    let subtotalTotal = 0;
+
+    // Generar el contenido del carrito
+    carrito.forEach(producto => {
+        const itemElement = document.createElement('div');
+        const itemTotal = producto.cantidad * producto.precio;
+        itemElement.innerHTML = `
+            <p><strong>Sabor:</strong> ${producto.id}</p>
+            <p><strong>Cantidad:</strong> ${producto.cantidad}</p>
+            <p><strong>Subtotal:</strong> $${itemTotal.toFixed(2)}</p>
+            <hr>
+        `;
+        carritoDetalleElement.appendChild(itemElement);
+        subtotalTotal += itemTotal;
+    });
+
+    // Agregar costo de envío y total
+    const opcionesEnvio = document.getElementById('opcionesEnvio');
+    const costoEnvio = parseFloat(opcionesEnvio.options[opcionesEnvio.selectedIndex].value);
+    
+    // Calcula el total correctamente
+    const total = subtotalTotal + costoEnvio;
+    const resumenElement = document.createElement('div');
+    resumenElement.innerHTML = `
+        <p><strong>Costo de envío:</strong> $${costoEnvio.toFixed(2)}</p>
+        <p><strong>Total:</strong> $${total.toFixed(2)}</p>
+    `;
+    carritoDetalleElement.appendChild(resumenElement);
+}
+
+// Función para añadir productos al carrito
+function agregarAlCarrito(button) {
+    console.log("Añadiendo al carrito");  // <-- Agregar esta línea para depuración
+    const card = button.closest('.card');
+    const productoId = card.getAttribute('data-id');
+    const precio = parseFloat(card.getAttribute('data-precio'));
+    const productoExistente = carrito.find(producto => producto.id === productoId);
+
+    if (productoExistente) {
+        productoExistente.cantidad += 1;
+    } else {
+        carrito.push({ id: productoId, cantidad: 1, precio });
+    }
+
+    carritoCantidad += 1;
+    actualizarCantidadEnTarjeta(card, productoId);
+    actualizarCarritoNotificacion();
+    actualizarCarritoDetalle();
+}
+
+
+// Función para quitar productos del carrito
+function quitarDelCarrito(button) {
+    const card = button.closest('.card');
+    const productoId = card.getAttribute('data-id');
+    const productoExistente = carrito.find(producto => producto.id === productoId);
+
+    if (productoExistente && productoExistente.cantidad > 0) {
+        productoExistente.cantidad -= 1;
+        carritoCantidad -= 1;
+
+        if (productoExistente.cantidad === 0) {
+            carrito = carrito.filter(producto => producto.id !== productoId);
+        }
+    }
+
+    actualizarCantidadEnTarjeta(card, productoId);
+    actualizarCarritoNotificacion();
+    actualizarCarritoDetalle();
+}
+
+// Función para actualizar la notificación del carrito
+function actualizarCarritoNotificacion() {
+    const notificacionElement = document.querySelector('.carrito-notificacion');
+    notificacionElement.textContent = carritoCantidad;
+}
+
+// Función para mostrar el formulario de compra
+function mostrarFormulario() {
+    document.getElementById('modal').style.display = 'flex';
+}
+
+// Función para cerrar el modal
+function cerrarModal() {
+    document.getElementById('modal').style.display = 'none';
+}
+
+// Función para enviar el pedido por WhatsApp
+function enviarWhatsApp() {
+    const nombre = document.getElementById('nombre').value; 
+    const telefono = document.getElementById('telefono').value;
+    const direccion = document.getElementById('direccion').value;
+    const metodoPago = document.getElementById('metodoPago').value;
+    const nota = document.getElementById('nota').value;
+    
+    // Recoger la opción seleccionada del select y el valor del atributo data-municipio
+    const selectEnvio = document.getElementById('opcionesEnvio');
+    const opcionesEnvio = selectEnvio.value;
+    const municipio = selectEnvio.options[selectEnvio.selectedIndex].getAttribute('data-municipio');
+
+    let mensaje = `\n VALE DE COMPRA`;
+    mensaje += `\n`;
+    carrito.forEach(producto => {
+        mensaje +=`\n*Pedido:*- ${producto.cantidad} - ${producto.id}`;
+    });
+    
+    mensaje += `\n*Nombre:* ${nombre}`;
+mensaje += `\n*Teléfono:* ${telefono}`;
+mensaje += `\n*Municipio:* ${municipio}`;
+mensaje += `\n*Dirección:* ${direccion}`;
+mensaje += `\n*Punto de Referencia:* ${nota}`;
+mensaje += `\n*Mensajería:* $${opcionesEnvio}`;
+mensaje += `\n*Total:* $${(parseFloat(opcionesEnvio) + carrito.reduce((acc, p) => acc + (p.precio * p.cantidad), 0)).toFixed(2)}`;
+mensaje += `\n*Método de Pago:* ${metodoPago}`;
+
+    const url = `https://wa.me/5353040553?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+}
+
+
+
+// Función para cerrar el modal de información
+function cerrarInfoModal() {
+    document.getElementById('infoModal').style.display = 'none';
+}
+
+// Función para enviar la pregunta a WhatsApp
+function sendQuestion() {
+    const question = document.getElementById('question').value.trim();
+    const producto = document.getElementById('productDataId').value; // Obtener el data-id del producto
+    const price = document.getElementById('productPrice').value; // Obtener el precio del producto
+    const phoneNumber = '5353040553'; // Reemplaza con tu número de WhatsApp
+
+    if (question === '') {
+   errorNombre.style.display="none"('Por favor, ingresa tu pregunta.');
+        return;
+    }
+
+    const message = encodeURIComponent(`Pregunta sobre el producto:\n*Producto:* ${producto}\n*Precio:* $${price}\n*Pregunta:* ${question}`);
+    const whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+
+    // Redirigir al usuario a la URL de WhatsApp
+    window.open(whatsappURL, '_blank');
+}
+
+// Función para filtrar los productos por categoría
+function filtrarPorCategoria(categoria) {
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+        if (categoria === 'all' || card.getAttribute('data-categoria') === categoria) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Función para mostrar el modal con la información del producto
+function mostrarModal(card) {
+    const imgSrc = card.querySelector('img').src;
+    const title = card.querySelector('h2').textContent;
+    const description = card.querySelector('p').textContent;
+    const price = card.querySelector('.precio').textContent;
+
+    // Asignar la información del producto al modal
+    document.getElementById('modalImg').src = imgSrc;
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalDescription').textContent = description;
+    document.getElementById('modalPrice').textContent = price;
+
+    // Mostrar el modal
+    document.getElementById('infoModal').style.display = 'flex';
+}
+
+// Manejador de clics para abrir el modal si se hace clic en la tarjeta
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', function(event) {
+        // Verifica si el clic fue en un botón para añadir o eliminar del carrito
+        const isAddOrRemoveButton = event.target.classList.contains('add') || event.target.classList.contains('remove');
+
+        // Si no es un botón, mostrar el modal
+        if (!isAddOrRemoveButton) {
+            mostrarModal(card);
+        }
+    });
+});
+
+// Función para añadir productos al carrito
+function agregarAlCarrito(button) {
+    const card = button.closest('.card');
+    const productoId = card.getAttribute('data-id');
+    const precio = parseFloat(card.getAttribute('data-precio'));
+    const productoExistente = carrito.find(producto => producto.id === productoId);
+
+    if (productoExistente) {
+        productoExistente.cantidad += 1;
+    } else {
+        carrito.push({ id: productoId, cantidad: 1, precio });
+    }
+
+    carritoCantidad += 1;
+    actualizarCantidadEnTarjeta(card, productoId);
+    actualizarCarritoNotificacion();
+    actualizarCarritoDetalle();
+}
+
+// Función para quitar productos del carrito
+function quitarDelCarrito(button) {
+    const card = button.closest('.card');
+    const productoId = card.getAttribute('data-id');
+    const productoExistente = carrito.find(producto => producto.id === productoId);
+
+    if (productoExistente && productoExistente.cantidad > 0) {
+        productoExistente.cantidad -= 1;
+        carritoCantidad -= 1;
+
+        if (productoExistente.cantidad === 0) {
+            carrito = carrito.filter(producto => producto.id !== productoId);
+        }
+    }
+
+    actualizarCantidadEnTarjeta(card, productoId);
+    actualizarCarritoNotificacion();
+    actualizarCarritoDetalle();
+}
+
+// Manejador de clics para los botones de añadir y eliminar del carrito
+function handleAddRemoveButtonClick(event) {
+    event.stopPropagation(); // Evitar que el clic abra el modal
+
+    if (event.target.classList.contains('add')) {
+        agregarAlCarrito(event.target);
+    } else if (event.target.classList.contains('remove')) {
+        quitarDelCarrito(event.target);
+    }
+}
+
+// Asignar eventos a los botones de "Añadir al carrito" y "Eliminar del carrito"
+function asignarEventosBotones() {
+    document.querySelectorAll('.button-container .add, .button-container .remove').forEach(button => {
+        // Antes de agregar el evento, asegúrate de que no hay listeners duplicados
+        button.removeEventListener('click', handleAddRemoveButtonClick);
+        button.addEventListener('click', handleAddRemoveButtonClick);
+    });
+}
+
+// Llama a la función para asegurarte de que los botones tienen sus eventos asignados
+asignarEventosBotones();
+
+// Cerrar el modal cuando se hace clic en la "X"
+document.getElementById('closeModal').addEventListener('click', function() {
+    document.getElementById('infoModal').style.display = 'none';
+});
+
+// Cerrar el modal cuando se hace clic fuera del contenido del modal
+window.addEventListener('click', function(event) {
+    if (event.target === document.getElementById('infoModal')) {
+        document.getElementById('infoModal').style.display = 'none';
+    }
+});
+// Slider functionality
+// Slider functionality
+let currentSlide = 0;
+const slideInterval = 4000; // Intervalo en milisegundos (3 segundos)
+
+function showSlide(index) {
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    
+    if (index >= totalSlides) currentSlide = 0;
+    if (index < 0) currentSlide = totalSlides - 1;
+
+    const offset = -currentSlide * 100;
+    document.querySelector('.slider').style.transform = `translateX(${offset}%)`;
+}
+
+// Function to move to the next slide
+function nextSlide() {
+    currentSlide++;
+    showSlide(currentSlide);
+}
+
+// Automatic slide change
+let slideTimer = setInterval(nextSlide, slideInterval);
+
+document.querySelector('.prev').addEventListener('click', () => {
+    currentSlide--;
+    showSlide(currentSlide);
+    resetTimer(); // Reset the automatic slide change timer
+});
+
+document.querySelector('.next').addEventListener('click', () => {
+    currentSlide++;
+    showSlide(currentSlide);
+    resetTimer(); // Reset the automatic slide change timer
+});
+
+// Function to reset the automatic slide change timer
+function resetTimer() {
+    clearInterval(slideTimer);
+    slideTimer = setInterval(nextSlide, slideInterval);
+}
+
+// Show the first slide initially
+showSlide(currentSlide);
+
+
+</script>
+</body>
+</html>
